@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5 dies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Chakra+Petch:wght@700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #000;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Grain */
+.grain {
+  position: fixed;
+  inset: -120px;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.038;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 80px;
+  animation: grain-shift 0.38s steps(3) infinite;
+}
+@keyframes grain-shift {
+  0%   { background-position:  0px   0px; }
+  33%  { background-position: -28px  18px; }
+  66%  { background-position:  12px -22px; }
+  100% { background-position:  0px   0px; }
+}
+
+/* Scanlines */
+.scanlines {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 2px,
+    rgba(0,0,0,0.08) 2px,
+    rgba(0,0,0,0.08) 4px
+  );
+  opacity: 0.4;
+}
+
+/* Flash */
+.flash {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: radial-gradient(ellipse at center,
+    #ffffff 0%, #fff3e0 45%, #ff8020 100%);
+  opacity: 0;
+  pointer-events: none;
+  animation: do-flash 0.6s ease-out 4.0s 1 both;
+}
+@keyframes do-flash {
+  0%   { opacity: 0; }
+  12%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Stage */
+.stage {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  user-select: none;
+}
+
+/* ── "5" ── */
+.n5 {
+  font-family: 'Bebas Neue', Impact, 'Arial Black', sans-serif;
+  font-size: clamp(150px, 30vw, 400px);
+  color: #fff;
+  line-height: 0.88;
+  letter-spacing: -0.02em;
+  animation:
+    slam       0.65s  cubic-bezier(0.04, 0.0, 0.08, 1.0) 4.5s  both,
+    n5-glow    3.4s   ease-in-out                        5.5s  infinite;
+}
+@keyframes slam {
+  0%   { opacity: 0; transform: translateY(-80px) scaleY(1.2); filter: blur(10px); }
+  50%  { opacity: 1; transform: translateY(12px)  scaleY(0.95); filter: blur(0px); }
+  72%  { transform: translateY(-6px) scaleY(1.02); }
+  88%  { transform: translateY(3px)  scaleY(0.99); }
+  100% { opacity: 1; transform: translateY(0)     scaleY(1.0); }
+}
+@keyframes n5-glow {
+  0%, 100% {
+    text-shadow:
+      0 0  55px rgba(255, 105, 20, 0.75),
+      0 0 120px rgba(255,  65,  0, 0.38),
+      0 0 200px rgba(200,  30,  0, 0.17);
+  }
+  50% {
+    text-shadow:
+      0 0  90px rgba(255, 145, 45, 1.0),
+      0 0 170px rgba(255,  95,  0, 0.65),
+      0 0 280px rgba(200,  45,  0, 0.32);
+  }
+}
+
+/* ── Divider ── */
+.divider {
+  height: 2px;
+  width: 0;
+  border-radius: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    #ff9a40 18%, #ffd880 50%, #ff9a40 82%,
+    transparent 100%);
+  opacity: 0;
+  margin: 0.18em 0 0.24em;
+  animation: div-in 0.8s cubic-bezier(0.15, 0, 0.1, 1) 5.15s both;
+}
+@keyframes div-in {
+  from { width: 0; opacity: 0; }
+  to   { width: min(78%, 390px); opacity: 0.85; }
+}
+
+/* ── "dies" ── */
+.dies {
+  font-family: 'Chakra Petch', 'Bebas Neue', 'Courier New', monospace;
+  font-size: clamp(20px, 5vw, 66px);
+  letter-spacing: 0.58em;
+  padding-left: 0.58em;
+  color: #FF8C3E;
+  text-transform: uppercase;
+  display: flex;
+  animation: dies-glow 3.4s ease-in-out 6.3s infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 115, 20, 0.55));
+}
+@keyframes dies-glow {
+  0%, 100% { filter: drop-shadow(0 0 10px rgba(255, 115, 20, 0.55)); }
+  50%       { filter: drop-shadow(0 0 24px rgba(255, 165, 60, 0.95)); }
+}
+.dies span {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(14px);
+  animation: letter-up 0.45s cubic-bezier(0.15, 0, 0.08, 1.3) both;
+}
+.dies span:nth-child(1) { animation-delay: 5.35s; }
+.dies span:nth-child(2) { animation-delay: 5.55s; }
+.dies span:nth-child(3) { animation-delay: 5.75s; }
+.dies span:nth-child(4) { animation-delay: 5.95s; }
+@keyframes letter-up {
+  0%   { opacity: 0; transform: translateY(16px); }
+  55%  { opacity: 1; transform: translateY(-4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+<div class="grain"></div>
+<div class="scanlines"></div>
+<div class="flash"></div>
+
+<div class="stage">
+  <div class="n5">5</div>
+  <div class="divider"></div>
+  <div class="dies">
+    <span>d</span><span>i</span><span>e</span><span>s</span>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   CANVAS  –  Particle vortex → implosion → explosion
+   ============================================================ */
+const CV = document.getElementById('c');
+const CX = CV.getContext('2d');
+let W, H, cx, cy;
+
+function resize() {
+  W  = CV.width  = window.innerWidth;
+  H  = CV.height = window.innerHeight;
+  cx = W / 2;
+  cy = H / 2;
+}
+resize();
+window.addEventListener('resize', resize);
+
+/* ---- Timing (seconds from page load) ---- */
+const T_GATHER = 2.8;   // particles start converging
+const T_FLASH  = 4.05;  // white flash peak
+const T_BLAST  = 4.3;   // explosion starts
+
+/* ---- Particle factory ---- */
+function newP(scatter) {
+  const angle = Math.random() * Math.PI * 2;
+  return {
+    x:   scatter ? Math.random() * W : cx,
+    y:   scatter ? Math.random() * H : cy,
+    vx:  (Math.random() - 0.5) * 0.38,
+    vy:  (Math.random() - 0.5) * 0.28 - 0.12,  // slight upward drift
+    r:   Math.random() * 1.5 + 0.3,
+    a:   Math.random() * 0.48 + 0.07,
+    hue: 210,     // starts blue-white, shifts to orange
+    prepped: false,
+    bvx: 0, bvy: 0,
+    blown: false,
+    dead: false,
+  };
+}
+
+const PS = Array.from({ length: 340 }, () => newP(true));
+
+/* ---- Main loop ---- */
+const PAGE_T0 = performance.now();
+
+function frame(ts) {
+  const t = (ts - PAGE_T0) / 1000;
+
+  /* Background – longer trails during vortex for spiral streaks */
+  CX.fillStyle = `rgba(0,0,0,${t > T_GATHER && t < T_FLASH ? 0.10 : 0.18})`;
+  CX.fillRect(0, 0, W, H);
+
+  /* Hard black fade-in from pure black */
+  if (t < 0.55) {
+    CX.fillStyle = `rgba(0,0,0,${1 - t / 0.55})`;
+    CX.fillRect(0, 0, W, H);
+  }
+
+  /* Warm spotlight grows from center after flash */
+  if (t > T_FLASH) {
+    const p = Math.min((t - T_FLASH) / 3.0, 1);
+    const grd = CX.createRadialGradient(cx, cy, 0, cx, cy, Math.max(W, H) * 0.62);
+    grd.addColorStop(0,   `rgba(255, 85, 10, ${0.11 * p})`);
+    grd.addColorStop(0.5, `rgba(255, 50,  5, ${0.04 * p})`);
+    grd.addColorStop(1,   'transparent');
+    CX.fillStyle = grd;
+    CX.fillRect(0, 0, W, H);
+  }
+
+  /* Shockwave rings */
+  if (t > T_FLASH + 0.08) {
+    const widths = [2.6, 1.5, 1.0];
+    const peaks  = [0.50, 0.28, 0.14];
+    for (let ring = 0; ring < 3; ring++) {
+      const rt = t - T_FLASH - 0.08 - ring * 0.22;
+      if (rt < 0) continue;
+      const norm   = Math.min(rt / 2.4, 1);
+      const radius = norm * Math.hypot(W, H) * 0.65;
+      const alpha  = (1 - norm) * peaks[ring];
+      if (alpha < 0.005) continue;
+      CX.beginPath();
+      CX.arc(cx, cy, radius, 0, Math.PI * 2);
+      CX.strokeStyle = `rgba(255, 148, 42, ${alpha})`;
+      CX.lineWidth   = widths[ring];
+      CX.stroke();
+    }
+  }
+
+  /* Ambient inner-glow ring before gather */
+  if (t > 1.2 && t < T_GATHER) {
+    const p = (t - 1.2) / (T_GATHER - 1.2);
+    const r = 30 + p * 60;
+    const grd2 = CX.createRadialGradient(cx, cy, r * 0.4, cx, cy, r);
+    grd2.addColorStop(0, `rgba(180, 200, 255, ${0.04 * p})`);
+    grd2.addColorStop(1, 'transparent');
+    CX.fillStyle = grd2;
+    CX.fillRect(0, 0, W, H);
+  }
+
+  /* ---- Particles ---- */
+  for (let i = 0; i < PS.length; i++) {
+    const p = PS[i];
+    if (p.dead) continue;
+
+    if (t < T_GATHER) {
+      /* Ambient float – wraps edges */
+      p.x += p.vx;
+      p.y += p.vy;
+      p.x = ((p.x % (W + 8)) + W + 8) % (W + 8) - 4;
+      p.y = ((p.y % (H + 8)) + H + 8) % (H + 8) - 4;
+
+    } else if (t < T_FLASH) {
+      /* Vortex spiral gather */
+      const prog = (t - T_GATHER) / (T_FLASH - T_GATHER); // 0 → 1
+      const dx = cx - p.x, dy = cy - p.y;
+      const dist = Math.hypot(dx, dy) || 1;
+      const pull = 0.011 + prog * 0.048;  // grows stronger
+      const spin = 0.020 * (1 - prog * 0.55); // loosens near end
+      p.vx = p.vx * 0.90 + (dx / dist) * pull + (-dy / dist) * spin;
+      p.vy = p.vy * 0.90 + (dy / dist) * pull + ( dx / dist) * spin;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.hue = 210 - prog * 198; // 210 (cool blue) → 12 (fire orange)
+
+    } else if (t < T_BLAST) {
+      /* Pre-blast hold – decelerate, arm explosion vector */
+      if (!p.prepped) {
+        p.prepped = true;
+        const ang = Math.random() * Math.PI * 2;
+        const spd = Math.random() * 17 + 4;
+        p.bvx = Math.cos(ang) * spd;
+        p.bvy = Math.sin(ang) * spd;
+      }
+      p.vx *= 0.88; p.vy *= 0.88;
+      p.x += p.vx;  p.y += p.vy;
+
+    } else {
+      /* Explosion */
+      if (!p.blown) {
+        p.blown = true;
+        p.vx = p.bvx; p.vy = p.bvy;
+      }
+      p.vx *= 0.91; p.vy *= 0.91;
+      p.x  += p.vx;  p.y += p.vy;
+      p.a  *= 0.992;
+      p.hue = 18 + Math.sin(ts * 0.03 + i) * 12; // flickering fire
+      if (p.a < 0.007) { p.dead = true; continue; }
+    }
+
+    CX.beginPath();
+    CX.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    CX.fillStyle = `hsla(${p.hue}, ${t < T_GATHER ? 8 : 92}%, 82%, ${p.a})`;
+    CX.fill();
+  }
+
+  requestAnimationFrame(frame);
+}
+
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
